@@ -1,0 +1,80 @@
+#include<stdio.h>
+void sortarrivetime(int n ,int arrivetime[],int brusttime[])
+{
+int i ,j;
+for(i = 1 ; i <= n ; i++)
+{
+for(j = 1; j <= n ; j++)
+{
+if(arrivetime[i] < arrivetime[j] )
+{
+int temp = arrivetime[i];
+int temp2 = brusttime[i];
+arrivetime[i] = arrivetime[j];
+brusttime[i] = brusttime[j];
+arrivetime[j] = temp;
+brusttime[j] = temp2;
+}
+}
+}
+}
+void displayarrivetimes(int n , int arrivetime[],int brusttime[])
+{
+int i;
+for(i = 1; i <= n; i++)
+{
+printf("Arrive time : %d  ",arrivetime[i]);
+printf("Brust time : %d \n",brusttime[i]);
+}
+}
+int main()
+{
+int n;
+printf("Enter the number of processes : ");
+scanf("%d",&n);
+int arrivetime[n],brusttime[n];
+int i ,j;
+for(i = 1 ; i <= n ; i++)
+{
+printf("Enter the arrive time of process %d : ",i);
+scanf("%d",&arrivetime[i]);
+}
+for(j = 1 ; j <= n ; j++)
+{
+printf("\nEnter the brust time of process %d : \n ",j);
+scanf("%d",&brusttime[j]);
+}
+sortarrivetime(n,arrivetime,brusttime);
+displayarrivetimes(n,arrivetime,brusttime);
+int gannchart[n];
+int l,m,k;
+for(l = 1 ; l <= n ; l++)
+{
+gannchart[l] = 0;
+for(m = 1 ; m <= l ; m++)
+{
+gannchart[l] = gannchart[l] + brusttime[m];
+}
+}
+printf(" gannchart chart is : \n ");
+for(k = 1 ; k <= n ; k++)
+{
+printf("%d ",gannchart[k]);
+}
+printf("\n");
+int p ;
+int turnaroundtime[n];
+for(p = 1 ; p <= n ; p++)
+{
+printf("The turn around time of process %d is  %d\n",p,gannchart[p] - arrivetime[p]);
+turnaroundtime[p] = gannchart[p] - arrivetime[p];
+}
+int q ;
+int waitingtime[n];
+for(q = 1 ; q <= n ; q++)
+{
+printf("The waiting time of process %d is  %d\n",q,turnaroundtime[q] - brusttime[q]);
+waitingtime[q] = turnaroundtime[q] - brusttime[q];
+}
+
+}
