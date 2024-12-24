@@ -14,7 +14,7 @@ int main() {
     int p[n], a[n], b[n];
     int completionTime[n], turnaroundTime[n], waitingTime[n];
 
-    printf("Enter the process IDs:");
+    printf("Enter the process IDs: ");
     for (i = 0; i < n; i++) {
         scanf("%d", &p[i]);
     }
@@ -32,9 +32,9 @@ int main() {
     calculateTurnaroundTime(a, completionTime, turnaroundTime, n);
     calculateWaitingTime(turnaroundTime, b, waitingTime, n);
 
-    printf("\nProcess ID\tArrival Time\tBurst Time\tCompletion Time\tTurnaround Time\tWaiting Time\n");
+    printf("\nProcessID ArrivalTime BurstTime CompletionTime TurnaroundTime WaitingTime\n");
     for (i = 0; i < n; i++) {
-        printf("%d\t\t\t\t%d\t\t\t\t%d\t\t\t\t%d\t\t\t\t%d\t\t\t\t%d  \n", p[i], a[i], b[i], completionTime[i], turnaroundTime[i], waitingTime[i]);
+       printf("%d\t\t\t%d\t\t\t%d\t\t\t%d\t\t\t\t%d\t\t\t\t%d\n", p[i], a[i], b[i], completionTime[i], turnaroundTime[i], waitingTime[i]);
     }
 
     float totalTurnaroundTime = 0, totalWaitingTime = 0;
@@ -76,9 +76,11 @@ void sort(int a[], int p[], int b[], int n) {
 void calculateCompletionTime(int a[], int b[], int completionTime[], int n) {
     int currentTime = 0;
     for (int i = 0; i < n; i++) {
-        currentTime = (currentTime < a[i]) ? a[i] : currentTime;
-        completionTime[i] = currentTime + b[i];
-        currentTime = completionTime[i];
+        if (currentTime < a[i]) {
+            currentTime = a[i];
+        }
+        currentTime += b[i];
+        completionTime[i] = currentTime;
     }
 }
 
@@ -93,3 +95,4 @@ void calculateWaitingTime(int turnaroundTime[], int b[], int waitingTime[], int 
         waitingTime[i] = turnaroundTime[i] - b[i];
     }
 }
+
