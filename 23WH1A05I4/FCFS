@@ -1,0 +1,97 @@
+#include <stdio.h>
+
+void findWaitingTime(int burst[], int waiting[], int n) {
+    waiting[0] = 0;
+    for (int i = 1; i < n; i++) {
+        waiting[i] = waiting[i - 1] + burst[i - 1];
+    }
+}
+
+void findTurnaroundTime(int burst[], int waiting[], int turnaround[], int n) {
+   
+    for (int i = 0; i < n; i++) {
+        turnaround[i] = burst[i] + waiting[i];
+    }
+}
+
+void printGanttChart(int process[], int n, int burst[]) {
+    printf("\nGantt Chart:\n");
+    printf("0\t");
+
+    for (int i = 0; i <n; i++) {
+        printf("P%d\t", process[i]);
+    }
+    printf("\n");
+
+    int totalTime = 0;
+    for (int i = 0; i < n; i++) {
+        totalTime += burst[i];
+        printf("%d\t", totalTime);
+    }
+    printf("\n");
+}
+
+void findAvgTime(int process[], int burst[], int arrival[], int n) {
+    int waiting[n], turnaround[n];
+
+    findWaitingTime(burst, waiting, n);
+    findTurnaroundTime(burst, waiting, turnaround, n);
+
+    float totalWaiting = 0, totalTurnaround = 0;
+
+    printf("\nProcess ID\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time\n");
+    for (int i = 0; i < n; i++) {
+        totalWaiting += waiting[i];
+        totalTurnaround += turnaround[i];
+        printf("%d\t\t%d\t\t%d\t\t%d\t\t%d\n",
+               process[i], arrival[i], burst[i],
+               waiting[i], turnaround[i]);
+    }
+
+    printf("\nAverage Waiting Time: %.2f", totalWaiting / n);
+    printf("\nAverage Turnaround Time: %.2f\n", totalTurnaround / n);
+}
+
+int main() {
+    int n;
+   
+
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    int process[n], arrival[n], burst[n];
+
+    for (int i = 0; i < n; i++) {
+        process[i] = i + 1;
+        printf("Enter arrival time  for process %d: ", i + 1);
+        scanf("%d", &arrival[i]);
+        printf("Enter burst time  for process %d: ", i + 1);
+        scanf("%d", &burst[i]);
+       
+       
+    }
+
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arrival[j] > arrival[j + 1]) {
+               
+                int temp= arrival[j];
+                arrival[j] = arrival[j + 1];
+                arrival[j + 1] = temp;
+
+                int tempBurst = burst[j];
+                burst[j] = burst[j + 1];
+                burst[j + 1] = tempBurst;
+
+                int tempProcess = process[j];
+                process[j] = process[j + 1];
+                process[j + 1] = tempProcess;
+            }
+        }
+    }
+
+    findAvgTime(process, burst, arrival, n);
+    printGanttChart(process, n, burst);
+
+    return 0;
+}
