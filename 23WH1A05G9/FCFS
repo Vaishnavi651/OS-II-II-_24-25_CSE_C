@@ -1,0 +1,84 @@
+#include<stdio.h>
+void bubble_sort(int arr[],int bt[],int n);
+void print_array(int arr[],int n);
+void completion(int ct[],int bt[],int n);
+void turn_around(int tr[],int ct[],int at[],int n);
+void waiting(int wt[],int tr[],int bt[],int n);
+void avg_value(int array[],int n);
+int main(){
+int n,arrival_time[20],brust_time[20],turn_around_time[20],waiting_time[20],completion_time[20];
+printf("enter the number of processes:");
+scanf("%d",&n);
+for(int i = 0;i<n;i++){
+printf("enter the arrival time of %d:",i+1);
+scanf("%d",&arrival_time[i]);
+}
+for(int j=0;j<n;j++){
+printf("enter the brust time of %d:",j+1);
+scanf("%d",&brust_time[j]);
+}
+bubble_sort(arrival_time,brust_time,n);
+completion(completion_time,brust_time,n);
+turn_around(turn_around_time,completion_time,arrival_time,n);
+waiting(waiting_time,turn_around_time,brust_time,n);
+avg_value(turn_around_time,n);
+printf("the arrival_time is:");
+print_array(arrival_time,n);
+printf("brust time:");
+print_array(brust_time,n);
+printf("completion time:");
+print_array(completion_time,n);
+printf("turn around condition");
+print_array(turn_around_time,n);
+printf("waiting time");
+print_array(waiting_time,n);
+printf("average of wt:");
+avg_value(waiting_time,n);
+printf("avg of ta");
+avg_value(turn_around_time,n);
+}
+void bubble_sort(int arr[],int bt[],int n){
+for(int i=0;i<n-1;i++){
+for(int j =0;j<n-i-1;j++){
+if (arr[j]>arr[j+1]){
+int temp = arr[j];
+arr[j] = arr[j+1];
+arr[j+1] = temp;
+int temp1 = bt[j];
+bt[j] = bt[j+1];
+bt[j+1]=temp1;
+}
+}
+}
+}
+void completion(int ct[],int bt[],int n){
+ct[0]=bt[0];
+for(int i =0;i<n;i++){
+ct[i]=bt[i]+ct[i-1];
+}
+}
+void waiting(int wt[],int tr[],int bt[],int n){
+for(int i=0;i<n;i++){
+wt[i] = tr[i]-bt[i];
+}
+}
+void turn_around(int tr[],int ct[],int at[],int n){
+for(int i =0;i<n;i++){
+tr[i] = ct[i]-at[i];
+}
+}
+void print_array(int arr[],int n){
+for(int i = 0;i<n;i++){
+printf("%d ",arr[i]);
+}
+printf("\n");
+}
+void avg_value(int array[],int n){
+int sum=0;;
+for(int i =0;i<n;i++){
+sum = sum+array[i];
+}
+int avg = sum/n;
+printf("%d",avg);
+
+}
