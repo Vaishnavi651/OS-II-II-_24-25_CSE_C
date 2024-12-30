@@ -1,0 +1,83 @@
+#include<stdio.h>
+void bubble_sort(int arr[],int bt[],int n);
+void print_array(int arr[],int n);
+void completion(int ct[],int brust[],int n);
+void cal_turn_around(int trt[],int ctime[],int atime[],int n);
+void cal_wait_time(int wt[],int trt[],int btime[],int n);
+void avg_value(int arr[],int n);
+
+int main(){
+	int n,arrival_time[20],brust_time[20],waiting_time[20],turnaround_time[20],completion_time[20];
+	printf("Enter no. of processes:");
+	scanf("%d",&n);
+	printf("Enter arrival times for the processes:");
+	for(int i=0;i<n;i++){
+		scanf("%d",&arrival_time[i]);
+	}
+	printf("Enter brust time for the processes:");
+	for(int i=0;i<n;i++){
+		scanf("%d",&brust_time[i]);
+	}
+	bubble_sort(arrival_time,brust_time,n);
+	completion(completion_time,brust_time,n);
+	cal_turn_around(turnaround_time,completion_time,arrival_time,n);
+	cal_wait_time(waiting_time,turnaround_time,brust_time,n);
+	printf("Arrival time array:\n");
+	print_array(arrival_time,n);
+	printf("Brust time array:\n");
+	print_array(brust_time,n);
+	printf("Comletion time array:\n");
+	print_array(completion_time,n);
+	printf("turnaround time array:\n");
+	print_array(turnaround_time,n);
+	printf("waiting time array:\n");
+	print_array(waiting_time,n);
+	printf("Average of turnaround time:");
+	avg_value(turnaround_time,n);
+	printf("Average of waiting time:");
+	avg_value(waiting_time,n);
+}
+void bubble_sort(int arr[],int bt[],int n){
+	for(int i=0;i<n-1;i++){
+		for(int j=0;j<n-i-1;j++){
+			if(arr[j]>arr[j+1]){
+				int temp=arr[j];
+				arr[j]=arr[j+1];
+				arr[j+1]=temp;
+				int t1=bt[j];
+				bt[j]=bt[j+1];
+				bt[j+1]=t1;
+			}
+		}
+	}
+}
+
+void print_array(int arr[],int n){
+	for(int i=0;i<n;i++){
+                printf("%d ",arr[i]);
+        }
+	printf("\n");
+}
+void completion(int ct[],int brust[],int n){
+	ct[0]=brust[0];
+	for(int i=1;i<n;i++){
+		ct[i]=brust[i]+ct[i-1];
+	}
+}
+void cal_turn_around(int trt[],int ctime[],int atime[],int n){
+	for(int i=0;i<n;i++){
+		trt[i]=ctime[i]-atime[i];
+	}
+}
+void cal_wait_time(int wt[],int trt[],int btime[],int n){
+	for(int i=0;i<n;i++){
+		wt[i]=trt[i]-btime[i];
+	}
+} void avg_value(int arr[],int n){
+	int sum=0,avg;
+	for(int i=0;i<n;i++){
+		sum=sum+arr[i];
+	}
+	avg=sum/n;
+	printf("%d\n",avg);
+}
