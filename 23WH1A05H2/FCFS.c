@@ -1,46 +1,69 @@
 #include <stdio.h>
-
-void calculate(int n, int bt[], int at[], int wt[], int tat[]) {
-    int twt = 0, ttat = 0;
-
-    wt[0] = 0;
-
-    for (int i = 1; i < n; i++) {
-        wt[i] = bt[i - 1] + wt[i - 1] - at[i];
-        if (wt[i] < 0) wt[i] = 0;
-    }
-
-    for (int i = 0; i < n; i++) {
-        tat[i] = bt[i] + wt[i];
-    }
-
-    printf("\nProcesses\tBurst Time\tWaiting Time\tTurn-Around Time\n");
-    for (int i = 0; i < n; i++) {
-        twt += wt[i];
-        ttat += tat[i];
-        printf("%d\t\t%d\t\t%d\t\t%d\n", i + 1, bt[i], wt[i], tat[i]);
-    }
-
-    printf("\nAverage waiting time = %.2f", (float)twt / n);
-    printf("\nAverage turn-around time = %.2f\n", (float)ttat / n);
-}
+#include <stdlib.h>
 
 int main() {
-    int n;
-
+    int count;
     printf("Enter the number of processes: ");
-    scanf("%d", &n);
+    scanf("%d", &count);
 
-    int bt[n], at[n], wt[n], tat[n];
+    int arrivals[count], processes[count], bursts[count], completion[count], turnaround[count], waiting[count];
 
-    for (int i = 0; i < n; i++) {
-        printf("Enter burst time for process %d: ", i + 1);
-        scanf("%d", &bt[i]);
-        printf("Enter arrival time for process %d: ", i + 1);
-        scanf("%d", &at[i]);
+    for (int i = 0; i < count; i++) {
+        processes[i] = i + 1;
     }
 
-    calculate(n, bt, at, wt, tat);
+    for (int i = 0; i < count; i++) {
+        printf("Arrival time of Process %d: ", processes[i]);
+        scanf("%d", &arrivals[i]);
+        printf("Burst time of Process %d: ", processes[i]);
+        scanf("%d", &bursts[i]);
+    }
+
+    bubblesort(count, processes, arrivals, bursts);
+
+    int currentTime = 0;
+    for (int i = 0; i < count; i++) {
+        if (currentTime < arrivals[i]) {
+            currentTime = arrivals[i];
+        }
+        completion[i] = currentTime + bursts[i];
+        currentTime = completion[i];
+    }
+
+    for (int i = 0; i < count; i++) {
+        turnaround[i] = completion[i] - arrivals[i];
+        waiting[i] = turnaround[i] - bursts[i];
+    }
+
+    printf("\nProcessID\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time\n");
+    for (int i = 0; i < count; i++) {
+        printf("%d\t\t%d\t\t%d\t\t%d\t\t%d\n", processes[i], arrivals[i], bursts[i], waiting[i], turnaround[i]);
+    }
 
     return 0;
+}
+
+void bubblesort(int count, int processes[], int arrivals[], int bursts[]);
+
+void bubblesort(int count, int processes[], int arrivals[], int bursts[]) {
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - 1 - i; j++) {
+            if (arrivals[j] > arrivals[j + 1]) {
+                // Swap arrivals
+                int temp = arrivals[j];
+                arrivals[j] = arrivals[j + 1];
+                arrivals[j + 1] = temp;
+
+                // Swap processes
+                temp = processes[j];
+                processes[j] = processes[j + 1];
+                processes[j + 1] = temp;
+
+                // Swap bursts
+                temp = bursts[j];
+                bursts[j] = bursts[j + 1];
+                bursts[j + 1] = temp;
+            }
+        }
+    }
 }
