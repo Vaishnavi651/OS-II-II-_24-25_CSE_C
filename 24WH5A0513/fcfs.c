@@ -1,11 +1,11 @@
 #include <stdio.h>
 
 struct Process {
-    int id;         // Process ID
-    int arrival;    // Arrival time
-    int burst;      // Burst time
-    int waiting;    // Waiting time
-    int turnaround; // Turnaround time
+    int id;         
+    int arrival;    
+    int burst;      
+    int waiting;    
+    int turnaround; 
 };
 
 void findWaitingTime(struct Process proc[], int n) {
