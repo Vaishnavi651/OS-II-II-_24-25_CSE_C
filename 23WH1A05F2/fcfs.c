@@ -42,7 +42,7 @@ int main()
 		}
 	}
 	ct[0]=at[0]+bt[0];
-    /* calculating 2 to n ct */
+
     for(i=1;i<n;i++)
     {  
       //when proess is ideal in between i and i+1
@@ -53,7 +53,7 @@ int main()
      }
      ct[i]=ct[i-1]+bt[i]+temp;
     }
-    /* calculating
+    
     printf("\np\t A.T\t B.T\t C.T\t TAT\t WT");
     for(i=0;i<n;i++)
     {
