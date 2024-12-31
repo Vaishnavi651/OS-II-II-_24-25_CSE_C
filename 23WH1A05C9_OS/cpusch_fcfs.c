@@ -20,6 +20,7 @@ void sort(int pro[],int ari[],int bru[],int n){
 			}
 		}
 	}
+	printf("\n");
 	printf("after printing\n");
 	for(int d=0;d<n;d++){
 		printf("%d ",ari[d]);
@@ -45,7 +46,11 @@ void avg(int bru[],int ari[],int n){
 		//avgwaiting+=(gann[l]-ari[l])-bru[l];
 	}
 	for(int m=0;m<n;m++){
-		avgwaiting+=turn[m]-bru[m];
+	    int j=turn[m]-bru[m];
+	    if((j)<0){
+		    j=0;
+	    }
+	    avgwaiting+=j;
 		//printf("%d\n",avgwaiting);
 	}
 	//return sumofavg;
@@ -61,19 +66,37 @@ int main(){
 	int n;
 	printf("enter the number of processes :");
 	scanf("%d",&n);
+	
+	if (n <= 0) {
+        printf("Number of processes must be greater than zero.\n");
+        return 0;
+    }
+
 	int pro[n],ch;
 	int ari[n],bru[n];
+	
 	for(int i=0;i<n;i++){
 		scanf("%d",&pro[i]);
 	}
+	
 	printf("enter the arrival times\n");
 	for(int j=0;j<n;j++){
 		scanf("%d",&ari[j]);
 	}
+	
 	printf("enter the brust times\n");
 	for(int k=0;k<n;k++){
 		scanf("%d",&bru[k]);
 	}
+	
+	//checking valid or not
+	for (int i = 0; i < n; i++) {
+        if (pro[i] < 0 || ari[i] < 0 || bru[i] < 0) {
+            printf("Invalid input: process ID, arrival time, and burst time must be non-negative.\n");
+            return 0;
+        }
+    }
+
 
 	// sorting
 	sort(pro,ari,bru,n);
@@ -82,11 +105,12 @@ int main(){
 	printf("average turn time: \n");
 	avg(bru,ari,n);
 
-
-	//average of waiting time
-	//intf("\n average of waiting times");
-	//printf("%d ",&average(gann,bru,n));
 }
+
+
+
+
+
 
 
 
