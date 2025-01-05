@@ -33,11 +33,11 @@ void main() {
         wt[i]=ct[i-1]-arrival[i];
         if(wt[i]<0){
         	wt[i]=0;
-		}
+	}
     }
     for(j=0;j<n;j++){
     	tt[j]=wt[j]+burst[j];
-	}
+    }
     
     printf("\nProcessID\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time\n");
     for(i=0;i<n;i++) {
@@ -47,8 +47,8 @@ void main() {
     for(m=0;m<n;m++){
     	avgW+=wt[m];
     	avgT+=tt[m];
-	} 
-	printf("The average Turnaround time is %.2f\n", (float)avgT / n);
+    } 
+    printf("The average Turnaround time is %.2f\n", (float)avgT / n);
     printf("The average Waiting time is %.2f", (float)avgW / n);
 }
 void bubblesort(int n, int process[], int arrival[], int burst[]){
@@ -57,16 +57,16 @@ void bubblesort(int n, int process[], int arrival[], int burst[]){
 		for(j=0;j<n-i-1;j++){
 			if(burst[j]>burst[j+1]){
 				int temp = burst[j];
-                burst[j] = burst[j+1];
-                burst[j+1] = temp;
-
-                temp = arrival[j];
-                arrival[j] = arrival[j+1];
-                arrival[j+1] = temp;
-                
-                temp = process[j];
-                process[j] = process[j+1];
-                process[j+1] = temp;
+		                burst[j] = burst[j+1];
+		                burst[j+1] = temp;
+		
+		                temp = arrival[j];
+		                arrival[j] = arrival[j+1];
+		                arrival[j+1] = temp;
+		                
+		                temp = process[j];
+		                process[j] = process[j+1];
+		                process[j+1] = temp;
 			}
 		}
 	}
