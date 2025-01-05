@@ -2,7 +2,6 @@
 #include<stdlib.h>
 
 void bubblesort(int n, int process[], int arrival[], int burst[]);
-void swap(int a, int b);
 
 void main() {
     int n;
