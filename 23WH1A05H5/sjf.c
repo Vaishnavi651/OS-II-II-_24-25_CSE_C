@@ -73,10 +73,5 @@ void bubblesort(int n, int process[], int arrival[], int burst[]){
 	}
 }
 
-void swap(int a, int b){
-	int temp;
-	temp=a;
-	a=b;
-	b=temp;
-}
+
 
