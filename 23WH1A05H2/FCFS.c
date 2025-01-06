@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+void bubblesort(int count, int processes[], int arrivals[], int bursts[]);
+
 int main() {
     int count;
     printf("Enter the number of processes: ");
@@ -43,7 +45,6 @@ int main() {
     return 0;
 }
 
-void bubblesort(int count, int processes[], int arrivals[], int bursts[]);
 
 void bubblesort(int count, int processes[], int arrivals[], int bursts[]) {
     for (int i = 0; i < count - 1; i++) {
