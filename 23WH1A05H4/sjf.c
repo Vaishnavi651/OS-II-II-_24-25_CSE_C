@@ -1,8 +1,7 @@
-#include<stdio.h>
-int main()
-{
-    int n;
+#include <stdio.h>
 
+int main() {
+    int n;
     printf("Enter the number of processes: ");
     scanf("%d", &n);
 
@@ -40,7 +39,11 @@ int main()
     int completionTime = 0;
 
     for (int i = 0; i < n; i++) {
-        waitingTime[i] = (completionTime > arrivalTime[i]) ? (completionTime - arrivalTime[i]) : 0;
+        if (completionTime > arrivalTime[i]) {
+            waitingTime[i] = completionTime - arrivalTime[i];
+        } else {
+            waitingTime[i] = 0; 
+        }
 
         turnaroundTime[i] = waitingTime[i] + burstTime[i];
 
