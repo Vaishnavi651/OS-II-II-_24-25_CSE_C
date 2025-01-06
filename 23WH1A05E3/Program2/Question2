@@ -1,0 +1,4 @@
+a) Write a program to implement Process management system calls viz., fork, exit, wait,
+waitpid, exec.
+b) Write a program to implement I/O system calls viz., open, read, write, close, seek, stat,
+opendir, readdir.
