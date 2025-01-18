@@ -11,8 +11,8 @@ int main() {
     printf("\nEnter Arrival Time:\n");
     for (i = 0; i < n; i++) {
         printf("p%d: ", i + 1);
-        scanf("%d", &at[i]); // Input for arrival times
-        p[i] = i + 1; // Process number
+        scanf("%d", &at[i]); 
+        p[i] = i + 1; 
     }
 
     printf("\nEnter Burst Time:\n");
@@ -72,14 +72,14 @@ int main() {
     printf("\nProcess\t Arrival Time\t Burst Time\t Waiting Time\t Turnaround Time");
     
     for (i = 0; i < n; i++) {
-        tat[i] = bt[i] + wt[i]; // Turnaround time calculation
+        tat[i] = bt[i] + wt[i]; 
         totalT += tat[i]; // Total turnaround time
 
         printf("\np%d\t\t %d\t\t %d\t\t %d\t\t\t %d", p[i], at[i], bt[i], wt[i], tat[i]);
     }
 
-    avg_wt = (float)total / n; // Average waiting time calculation
-    avg_tat = (float)totalT / n; // Average turnaround time calculation
+    avg_wt = (float)total / n; 
+    avg_tat = (float)totalT / n; 
 
     printf("\n\nAverage Waiting Time = %f", avg_wt);
     printf("\nAverage Turnaround Time = %f\n", avg_tat);
