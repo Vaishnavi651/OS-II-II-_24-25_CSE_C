@@ -29,7 +29,7 @@ int main() {
         scanf("%d", &pr[i]);
     }
 
-    // Sorting by burst time, then by arrival time
+  
     for (i = 0; i < n - 1; i++) {
         for (j = 0; j < n - i - 1; j++) {
             if (pr[j] > pr[j + 1] || (pr[j] == pr[j + 1] && at[j] > at[j + 1])) {
