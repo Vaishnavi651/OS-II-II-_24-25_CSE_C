@@ -1,55 +1,55 @@
 #include <stdio.h>
+#define MAX 100
 
 int main() {
-    int n, quantum;
+    int n, timeQuantum,i;
+    int burstTime[MAX], arrivalTime[MAX], waitingTime[MAX], turnAroundTime[MAX], remainingBurstTime[MAX], completionTime[MAX];
+    int pid[MAX]; 
+    int totalWaitingTime = 0, totalTurnAroundTime = 0, currentTime = 0, processesRemaining;
     printf("Enter the number of processes: ");
     scanf("%d", &n);
     printf("Enter the time quantum: ");
-    scanf("%d", &quantum);
-    
-    int pid[n], burstTime[n], waitingTime[n], turnAroundTime[n], remainingTime[n];
-    int currentTime = 0, completed = 0;
-    float totalWaitingTime = 0, totalTurnAroundTime = 0;
-    
-    for (int i = 0; i < n; i++) {
+    scanf("%d", &timeQuantum);
+    for (i = 0; i < n; i++) {
         pid[i] = i + 1;
         printf("Enter burst time for process %d: ", i + 1);
         scanf("%d", &burstTime[i]);
-        remainingTime[i] = burstTime[i];
-        waitingTime[i] = 0;
+        printf("Enter arrival time for process %d: ", i + 1);
+        scanf("%d", &arrivalTime[i]);
+        remainingBurstTime[i] = burstTime[i]; 
+        waitingTime[i] = 0; 
+        completionTime[i] = 0; 
     }
-    
-    while (completed < n) {
-        int executed = 0;
-        for (int i = 0; i < n; i++) {
-            if (remainingTime[i] > 0) {
-                executed = 1;
-                if (remainingTime[i] > quantum) {
-                    currentTime += quantum;
-                    remainingTime[i] -= quantum;
+    processesRemaining = n;
+    while (processesRemaining > 0) {
+        for (i = 0; i < n; i++) {
+            if (arrivalTime[i] <= currentTime && remainingBurstTime[i] > 0) {
+                if (remainingBurstTime[i] > timeQuantum) {
+                    currentTime += timeQuantum;
+                    remainingBurstTime[i] -= timeQuantum;
                 } else {
-                    currentTime += remainingTime[i];
-                    waitingTime[i] = currentTime - burstTime[i];
+                    currentTime += remainingBurstTime[i];
+                    completionTime[i] = currentTime; 
+                    waitingTime[i] = currentTime - burstTime[i] - arrivalTime[i];
+                    if (waitingTime[i] < 0) {
+                        waitingTime[i] = 0; 
+                    }
                     turnAroundTime[i] = waitingTime[i] + burstTime[i];
-                    remainingTime[i] = 0;
-                    completed++;
-                    totalWaitingTime += waitingTime[i];
-                    totalTurnAroundTime += turnAroundTime[i];
+                    remainingBurstTime[i] = 0; 
+                    processesRemaining--; 
                 }
             }
         }
-        if (!executed) {
-            currentTime++;
-        }
     }
-    
-    printf("\nProcesses\tBurst Time\tWaiting Time\tTurn-Around Time\n");
-    for (int i = 0; i < n; i++) {
-        printf("%d\t\t%d\t\t%d\t\t%d\n", pid[i], burstTime[i], waitingTime[i], turnAroundTime[i]);
+    for ( i = 0; i < n; i++) {
+        totalWaitingTime += waitingTime[i];
+        totalTurnAroundTime += turnAroundTime[i];
     }
-    
-    printf("\nAverage waiting time = %.2f\n", totalWaitingTime / n);
-    printf("Average turn-around time = %.2f\n", totalTurnAroundTime / n);
-    
+    printf("\nProcesses\tBurst Time\tArrival Time\tCompletion Time\tWaiting Time\tTurn-Around Time\n");
+    for (i = 0; i < n; i++) {
+        printf("%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", pid[i], burstTime[i], arrivalTime[i], completionTime[i], waitingTime[i], turnAroundTime[i]);
+    }
+    printf("\nAverage waiting time = %.2f\n", (float)totalWaitingTime / n);
+    printf("Average turn-around time = %.2f\n", (float)totalTurnAroundTime / n);
     return 0;
 }
