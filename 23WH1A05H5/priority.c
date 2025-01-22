@@ -27,6 +27,7 @@ int main(){
 		total=ct[i];
 	}
 	wt[0]=0;
+	tt[0]=bt[0]+wt[0];
 	for(i=1;i<n;i++){
 		wt[i]=ct[i-1]-at[i];
 		if(wt[i]<0){
