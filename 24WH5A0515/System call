@@ -1,0 +1,34 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h> 
+
+int main(){
+	pid_t pid;
+	int status;
+	pid=fork();
+
+	if(pid<0){
+		perror("Fork Failed");
+		exit(EXIT_FAILURE);
+	}
+	else if(pid==0){
+		printf("Child process(PID:%d).\n",getpid());
+		execlp("/bin/ls","ls","-l",NULL);
+		perror("Execution Failed");
+		exit(EXIT_FAILURE);
+	}
+	else{
+		printf("Parent Process(PID:%d).\n",getpid());
+		pid_t wait_pid= waitpid(pid,&status,0);
+		
+		if(wait_pid>=0){
+			printf("Child process (PID:%d) executed succuessfully",wait_pid);
+		}
+		else{
+			perror("Wait Failed");
+		}
+	}
+	
+}
