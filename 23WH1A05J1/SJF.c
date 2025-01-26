@@ -1,0 +1,55 @@
+#include <stdio.h>
+void  sjf_Scheduling(int processes[], int n, int bt[], int at[]) {
+    int temp;
+    int ct[n], tat[n], wt[n];
+    int total_tat = 0, total_wt = 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (bt[i] > bt[j] || (bt[i] == bt[j] && at[i] > at[j])) {
+                temp = at[i];
+                at[i] = at[j];
+                at[j] = temp;
+
+                temp = bt[i];
+                bt[i] = bt[j];
+                bt[j] = temp;
+
+                temp = processes[i];
+                processes[i] = processes[j];
+                processes[j] = temp;
+            }
+        }
+    }
+    printf("\nProcesses\tBurst Time\tArrival Time\tCompletion Time\tTurn-Around Time\tWaiting Time\n");
+    for (int i = 0; i < n; i++) {
+        if (i == 0) {
+            ct[i] = at[i] + bt[i];
+        } else {
+            ct[i] = (ct[i - 1] > at[i] ? ct[i - 1] : at[i]) + bt[i];
+        }
+        
+        tat[i] = ct[i] - at[i];
+        wt[i] = tat[i] - bt[i];
+
+        total_tat += tat[i];
+        total_wt += wt[i];
+        printf("P%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", processes[i], bt[i], at[i], ct[i], tat[i], wt[i]);
+    }
+    printf("\nAverage Turnaround Time = %.2f\n", (float)total_tat / n);
+    printf("Average Waiting Time = %.2f\n", (float)total_wt / n);
+}
+int main() {
+    int n;
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+    int processes[n], burst_time[n], arrival_time[n];
+    for (int i = 0; i < n; i++) {
+        processes[i] = i + 1;
+        printf("Enter burst time for process %d: ", i + 1);
+        scanf("%d", &burst_time[i]);
+        printf("Enter arrival time for process %d: ", i + 1);
+        scanf("%d", &arrival_time[i]);
+    }
+    sjf_Scheduling(processes, n, burst_time, arrival_time);
+    return 0;
+}
