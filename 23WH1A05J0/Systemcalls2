@@ -1,0 +1,23 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    FILE *fp;
+    char *filename = "hello_world.txt";
+
+    fp = fopen(filename, "w");
+    if (fp == NULL) {
+        perror("Error while opening file");
+        return 1;
+    }
+
+    fprintf(fp, "hii\n"); 
+    fprintf(fp, "I am Akshitha Nampally from CSE-C with roll number 23WH1A05J0!\n");
+
+    fclose(fp); 
+
+    printf("Message written to %s\n", filename);
+
+    return 0;
+}
