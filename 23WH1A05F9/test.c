@@ -1,25 +1,29 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-int main() {
-    pid_t pid = fork();
-    if (pid < 0) {
-        perror("Fork failed");
-        exit(1);
-    }
-    if (pid == 0) {
-        char *args[] = {"ls", NULL};  
-        execvp(args[0], args);
-        perror("exec failed");  
-        exit(1);
-    } else {
-        printf("Parent Process: PID = %d, Child PID = %d\n", getpid(), pid);
-        int status;
-        wait(&status);  
-        printf("Parent Process: Child has finished with status %d\n", status);
-        exit(0);
-    }
-    return 0;
+#include <stdlib.h>
+
+int main(){
+pid_t pid = fork();
+int status;
+if(pid < 0){
+perror("fork failled to execute");
+return 1;
+}
+else if(pid == 0){
+printf("\nchild process (PID:%d) executing 'fcfs' CPU scheduling\n",getpid());
+execlp("./fcfs","./fcfs",NULL);
+perror("execution failled");
+exit(1);
+}
+else{
+printf("\nparent process (PID:%d) waiting for child to finish\n",getpid());
+pid_t child_pid = wait(&status);
+if(child_pid < 0)
+perror("wait failled....");
+printf("\nchild process (PID:%d) finished with status : %d\n",child_pid,WEXITSTATUS(status));
+return 0;
+}
+return 0;
 }
