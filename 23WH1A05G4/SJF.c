@@ -1,6 +1,4 @@
 
-}
-
 int main() {
     int n;
     printf("Enter the number of processes to analyze: ");
