@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <string.h>
+#include <sys/types.h>
+
+#define FILENAME "testfile.txt"
+#define DIRNAME "."
+
+void writeToFile() {
+    int fd = open(FILENAME, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+    if (fd == -1) {
+        perror("Error opening file for writing");
+        exit(EXIT_FAILURE);
+    }
+
+    const char *text = "Hello, World!\nThis is a test file.\n";
+    if (write(fd, text, strlen(text)) == -1) {
+        perror("Error writing to file");
+        close(fd);
+        exit(EXIT_FAILURE);
+    }
+
+    close(fd);
+}
+
+void readFromFile() {
+    int fd = open(FILENAME, O_RDONLY);
+    if (fd == -1) {
+        perror("Error opening file for reading");
+        exit(EXIT_FAILURE);
+    }
+
+    char buffer[128];
+    ssize_t bytesRead;
+
+   
+    while ((bytesRead = read(fd, buffer, sizeof(buffer)-1)) > 0) {
+        buffer[bytesRead] = '\0';
+        printf("%s", buffer);
+    }
+
+    if (bytesRead == -1) {
+        perror("Error reading from file");
+    }
+
+   
+    lseek(fd, 0, SEEK_SET);
+    printf("\nRe-reading the file after seeking:\n");
+
+    while ((bytesRead = read(fd, buffer, sizeof(buffer)-1)) > 0) {
+        buffer[bytesRead] = '\0';
+        printf("%s", buffer);
+    }
+
+    close(fd);
+}
+
+void getFileStats() {
+    struct stat fileStat;
+
+    if (stat(FILENAME, &fileStat) < 0) {
+        perror("Error getting file stats");
+        return;
+    }
+
+    printf("\nFile: %s\n", FILENAME);
+    printf("Size: %ld bytes\n", fileStat.st_size);
+    printf("Number of links: %ld\n", fileStat.st_nlink);
+    printf("File inode: %ld\n", fileStat.st_ino);
+}
+
+void readDirectory() {
+    struct dirent *entry;
+    DIR *dp = opendir(DIRNAME);
+
+    if (dp == NULL) {
+        perror("Error opening directory");
+        return;
+    }
+
+    printf("\nContents of directory '%s':\n", DIRNAME);
+    while ((entry = readdir(dp)) != NULL) {
+        printf("%s\n", entry->d_name);
+    }
+
+    closedir(dp);
+}
+
+int main() {
+    writeToFile();
+    readFromFile();
+    getFileStats();
+    readDirectory();
+    return 0;
+}
