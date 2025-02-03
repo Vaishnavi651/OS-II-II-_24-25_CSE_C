@@ -1,49 +1,50 @@
-#include<stdio.h>
-#include<fcntl.h>
-#include<unistd.h>
-#include<sys/types.h>
-#include<sys/stat.h>
-#include<dirent.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
 int main() {
     int fd;
-    char buf[100];
-    fd = open("example.txt", O_WRONLY | O_CREAT, 0644);
-    if (fd == -1) {
-        printf("Error\n");
-        return 1;
+    char buffer[100];
+    
+    // Open file for writing (Create if doesn't exist, truncate to empty if exists)
+    fd = open("test.txt", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    if (fd < 0) {
+        perror("File opening failed");
+        exit(1);
     }
-    write(fd, "Hello, World!\n", 14);
-    close(fd);
-    fd = open("example.txt", O_RDONLY);
-    if (fd == -1) {
-        perror("Error occurred");
-        return 1;
-    }
-    read(fd, buf, sizeof(buf));
-    printf("Read from file: %s\n", buf);
-    close(fd);
-    off_t offset = lseek(fd, 0, SEEK_SET);
-    if (offset == (off_t) -1) {
-        perror("Error seeking");
-        return 1;
-    } struct stat fs;
-    if (stat("example.txt", &fs) == -1) {
-        perror("Error");
-        return 1;
-    }
-    printf("File size: %lld bytes\n", (long long) fs.st_size);
-    DIR *dir;
-    struct dirent *entry;
 
-    dir = opendir(".");
-    if (dir == NULL) {
-        perror("Error opening");
-        return 1;
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        perror("Fork failed");
+        exit(1);
     }
-    printf("Directory contents:\n");
-    while ((entry = readdir(dir)) != NULL) {
-        printf("%s\n", entry->d_name);
+
+    if (pid > 0) {  
+        // Parent Process
+        char *data = "Hello from Parent!\n";
+        write(fd, data, 19);  // Write data to file
+        close(fd);  // Close the file in the parent
+        wait(NULL); // Wait for child to finish
+        printf("Parent process done.\n");
+
+    } else {  
+        // Child Process
+        sleep(1); // Ensure parent writes before child reads
+
+        fd = open("test.txt", O_RDONLY); // Reopen file for reading
+        if (fd < 0) {
+            perror("File open failed in child");
+            exit(1);
+        }
+
+        read(fd, buffer, sizeof(buffer));  // Read from file
+        printf("Child read: %s", buffer); // Print content
+        close(fd);
     }
-    closedir(dir);
+
     return 0;
 }
