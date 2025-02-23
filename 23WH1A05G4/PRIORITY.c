@@ -1,105 +1,80 @@
 #include <stdio.h>
 
 int main() {
-    int p[100], at[100], bt[100], pr[100], n, ct[100], tat[100], wt[100], i, j, temp;
+    int p[100], at[100], bt[100], pr[100], ct[100], tat[100], wt[100], completed[100] = {0};
+    int n, i, currentTime = 0, completedCount = 0;
     float avg_tat = 0, avg_wt = 0;
 
-    // Input for the number of processes
+    // Input: Number of processes
     printf("Enter the number of processes: ");
     scanf("%d", &n);
 
-    // Input for Process IDs
+    // Input: Process IDs
     printf("Enter the process IDs: ");
     for (i = 0; i < n; i++) {
         scanf("%d", &p[i]);
     }
 
-    // Input for Arrival Times
+    // Input: Arrival Times
     printf("Enter the arrival times of each process: ");
     for (i = 0; i < n; i++) {
         scanf("%d", &at[i]);
     }
 
-    // Input for Burst Times
+    // Input: Burst Times
     printf("Enter the burst times of each process: ");
     for (i = 0; i < n; i++) {
         scanf("%d", &bt[i]);
     }
+
+    // Input: Priorities
     printf("Enter the priorities of each process: ");
     for (i = 0; i < n; i++) {
         scanf("%d", &pr[i]);
     }
 
-    // Sorting by burst time, then by arrival time
-    for (i = 0; i < n - 1; i++) {
-        for (j = 0; j < n - i - 1; j++) {
-            if (pr[j] > pr[j + 1] || (pr[j] == pr[j + 1] && at[j] > at[j + 1])) {
-                // Swap burst times
-                temp = bt[j];
-                bt[j] = bt[j + 1];
-                bt[j + 1] = temp;
+    // Priority Scheduling Logic (Non-Preemptive)
+    while (completedCount < n) {
+        int minIndex = -1;
 
-                // Swap arrival times
-                temp = at[j];
-                at[j] = at[j + 1];
-                at[j + 1] = temp;
-
-                // Swap process IDs
-                temp = p[j];
-                p[j] = p[j + 1];
-                p[j + 1] = temp;
-               
-                temp = pr[j];
-                pr[j] = pr[j + 1];
-                pr[j + 1] = temp;
-               
+        // Find the highest priority process that has arrived (lower number = higher priority)
+        for (i = 0; i < n; i++) {
+            if (!completed[i] && at[i] <= currentTime && 
+                (minIndex == -1 || pr[i] < pr[minIndex])) {
+                minIndex = i;
             }
         }
-    }
 
-
-    // Calculate Completion Time
-    int currentTime = 0;
-    for (i = 0; i < n; i++) {
-        if (currentTime < at[i]) {
-            currentTime = at[i];
+        // If no process is ready, move time forward
+        if (minIndex == -1) {
+            currentTime++;
+            continue;
         }
-        currentTime += bt[i];
-        ct[i] = currentTime;
-    }
-   
-   
 
-    // Calculate Turnaround Time
+        // Execute the selected process
+        currentTime += bt[minIndex];
+        ct[minIndex] = currentTime;
+        completed[minIndex] = 1; // Mark as completed
+        completedCount++;
+    }
+
+    // Calculate Turnaround Time and Waiting Time
     for (i = 0; i < n; i++) {
         tat[i] = ct[i] - at[i];
-    }
-
-    // Calculate Waiting Time
-    wt[0]=0;
-    for (i = 1; i < n; i++) {
         wt[i] = tat[i] - bt[i];
-        if (wt[i] < 0) {
-            wt[i] = 0;
-        }
-    }
-
-    // Display Results
-    printf("\nProcess  AT      BT    Priority   CT      TAT     WT");
-    for (i = 0; i < n; i++) {
-        printf("\nP%-8d%-8d%-8d%-8d%-8d%-8d%-8d", p[i], at[i], bt[i],pr[i], ct[i], tat[i], wt[i]);
-    }
-
-    // Calculate and display average waiting time and average turnaround time
-    for (i = 0; i < n; i++) {
         avg_tat += tat[i];
         avg_wt += wt[i];
     }
 
-    avg_tat /= n;
-    avg_wt /= n;
-    printf("\n\nAverage Turnaround Time: %.2f", avg_tat);
-    printf("\nAverage Waiting Time: %.2f\n", avg_wt);
+    // Display Results
+    printf("\nProcess  AT      BT      Priority   CT      TAT     WT");
+    for (i = 0; i < n; i++) {
+        printf("\nP%-8d%-8d%-8d%-8d%-8d%-8d%-8d", p[i], at[i], bt[i], pr[i], ct[i], tat[i], wt[i]);
+    }
 
-    return 0;
+    // Print Averages
+    printf("\n\nAverage Turnaround Time: %.2f", avg_tat / n);
+    printf("\nAverage Waiting Time: %.2f\n", avg_wt / n);
+
+return 0;
 }
