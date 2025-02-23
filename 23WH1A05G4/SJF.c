@@ -1,47 +1,74 @@
+#include <stdio.h>
 
 int main() {
-    int n;
-    printf("Enter the number of processes to analyze: ");
+    int p[100], at[100], bt[100], ct[100], tat[100], wt[100], completed[100] = {0};
+    int n, i, currentTime = 0, completedCount = 0;
+    float avg_tat = 0, avg_wt = 0;
+
+    // Input: Number of processes
+    printf("Enter the number of processes: ");
     scanf("%d", &n);
-    
-    int bt[100], at[100], tt[100], ct[100], wt[100], p[100];
 
-    printf("Enter the arrival time and burst time of processes:\n");
-    for (int i = 0; i < n; i++) {
-        p[i] = i + 1;
-        scanf("%d %d", &at[i], &bt[i]);
+    // Input: Process IDs
+    printf("Enter the process IDs: \n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &p[i]);
     }
 
-    sort(n, p, at, bt);
-
-    int sum = 0, sum1 = 0, sum2 = 0;
-
-    for (int x = 0; x < n; x++) {
-        sum += bt[x];
-        ct[x] = sum;  
+    // Input: Arrival Times
+    printf("Enter the arrival times of each process: \n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &at[i]);
     }
 
-    for (int c = 0; c < n; c++) {
-        tt[c] = ct[c] - at[c];
+    // Input: Burst Times
+    printf("Enter the burst times of each process: \n");
+    for (i = 0; i < n; i++) {
+        scanf("%d", &bt[i]);
     }
 
-    for (int g = 0; g < n; g++) {
-        wt[g] = tt[g] - bt[g];
+    // Non-preemptive SJF Scheduling
+    while (completedCount < n) {
+        int minIndex = -1;
+
+        // Find the shortest available process
+        for (i = 0; i < n; i++) {
+            if (!completed[i] && at[i] <= currentTime && 
+                (minIndex == -1 || bt[i] < bt[minIndex])) {
+                minIndex = i;
+            }
+        }
+
+        // If no process is ready, move time forward
+        if (minIndex == -1) {
+            currentTime++;
+            continue;
+        }
+
+        // Execute the selected process
+        currentTime += bt[minIndex];
+        ct[minIndex] = currentTime;
+        completed[minIndex] = 1; // Mark as completed
+        completedCount++;
     }
 
-    for (int y = 0; y < n; y++) {
-        sum1 += tt[y];
-        sum2 += wt[y];
+    // Calculate Turnaround Time and Waiting Time
+    for (i = 0; i < n; i++) {
+        tat[i] = ct[i] - at[i];
+        wt[i] = tat[i] - bt[i];
+        avg_tat += tat[i];
+        avg_wt += wt[i];
     }
 
-    printf("Processes    Arrival Time    Burst Time    Completion Time    Turnaround Time    Waiting Time\n");
-    for (int x = 0; x < n; x++) {
-        printf("%d           %d              %d              %d                %d               %d\n",
-               p[x], at[x], bt[x], ct[x], tt[x], wt[x]);
+    // Display Results
+    printf("\nProcess  AT      BT      CT      TAT     WT");
+    for (i = 0; i < n; i++) {
+        printf("\nP%-8d%-8d%-8d%-8d%-8d%-8d", p[i], at[i], bt[i], ct[i], tat[i], wt[i]);
     }
 
-    printf("The average Turnaround Time is: %.2f\n", (float)sum1 / n);
-    printf("The average Waiting Time is: %.2f\n", (float)sum2 / n);
+    // Print Averages
+    printf("\n\nAverage Turnaround Time: %.2f", avg_tat / n);
+    printf("\nAverage Waiting Time: %.2f\n", avg_wt / n);
 
-    return 0;
+    return 0;
 }
