@@ -1,43 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/wait.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-int main(int argc, char **argv) {
+int main() {
     pid_t pid;
+    int status;
 
-    pid = fork();  // Create a new process
-    if (pid < 0) {  // Error handling for fork()
-        printf("Fork failed\n");
+    pid = fork(); // Create child process
+
+    if (pid < 0) {
+        perror("Fork failed");
         exit(1);
-    } else if (pid == 0) {  // Child process
-        printf("Child process pid: %d is running 'ls'\n", getpid());
-
-        // Use system() to run the 'ls' command (this doesn't require execlp)
-        int result = system("ls");
-
-        if (result == -1) {
-            perror("system() failed");
-            exit(1);
-        }
-
-        exit(0);
-    } else {  // Parent process
-        int status;
-        printf("Parent process pid: %d is waiting for child pid: %d\n", getpid(), pid);
-
-        // Wait for the child process to exit
-        wait(&status);
-
-        // Check if the child process terminated normally
+    }
+    else if (pid == 0) { // Child process
+        printf("Child Process: PID = %d, Parent PID = %d\n", getpid(), getppid());
+        char *args[] = {"/bin/ls", "-l", NULL};
+        execvp(args[0], args); // Execute new program
+        perror("exec failed"); // If exec fails
+        exit(1);
+    }
+    else { // Parent process
+        printf("Parent Process: Waiting for child (PID = %d)\n", pid);
+        waitpid(pid, &status, 0); // Wait for child to terminate
         if (WIFEXITED(status)) {
-            printf("Child process has exited with status: %d\n", WEXITSTATUS(status));
-        } else {
+            printf("Child exited with status %d\n", WEXITSTATUS(status));
+        }
+        else {
             printf("Child process did not terminate normally\n");
         }
     }
-
     return 0;
 }
-
 
