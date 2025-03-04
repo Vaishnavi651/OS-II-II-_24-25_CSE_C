@@ -1,0 +1,128 @@
+#include<stdio.h>
+
+int main(){
+	int n,r,p[100],instances[100];
+	printf("Enter no.of processes:");
+	scanf("%d",&n);
+	printf("Enter the process id's:");
+	for(int i=0;i<n;i++){
+		scanf("%d",&p[i]);
+	}
+	printf("Enter no.of resources:");
+	scanf("%d",&r);
+	printf("Enter the instances of each resource:");
+	for(int i=0;i<r;i++){
+		scanf("%d",&instances[i]);
+	}
+	printf("Processes:");
+	for(int i=0;i<n;i++){
+		printf("P%d ",p[i]);
+	}
+	printf("\nInstances:");
+	for(int i=0;i<r;i++){
+		printf("%d ",instances[i]);
+	}
+	int allocation[n][r],maximum[n][r];
+	printf("\nEnter the allocated resources for each process:\n");
+	for(int i=0;i<n;i++){
+		printf("\nEnter the allocated resources for process %d:",i+1);
+		for(int j=0;j<r;j++){
+			scanf("%d",&allocation[i][j]);
+		}
+	}
+	printf("\nThe allocated resources for each process:\n");
+        for(int i=0;i<n;i++){
+                printf("\nThe allocated resources for process %d:",i+1);
+                for(int j=0;j<r;j++){
+                        printf("%d ",allocation[i][j]);
+                }
+        }
+	printf("\nEnter the maximum required resources for each process:\n");
+	for(int i=0;i<n;i++){
+		printf("\nEnter the maximum required resources for process %d:",i+1);
+		for(int j=0;j<r;j++){
+			scanf("%d",&maximum[i][j]);
+		}
+	}
+	printf("\nThe maximum required resources for each process:\n");
+        for(int i=0;i<n;i++){
+                for(int j=0;j<r;j++){
+                        printf("%d ",maximum[i][j]);
+                }
+		printf("\n");
+        }
+	int need[n][r];
+	for(int i=0;i<n;i++){
+		for(int j=0;j<r;j++){
+			need[i][j]=maximum[i][j]-allocation[i][j];
+		}
+	}
+	printf("The needed resources for each process is:\n");
+	for(int i=0;i<n;i++){
+		for(int j=0;j<r;j++){
+			printf("%d ",need[i][j]);
+		}
+		printf("\n");
+	}
+	int available[r],sum[r],s;
+	for(int j=0;j<r;j++){
+		s=0;
+		for(int i=0;i<n;i++){
+			s+=allocation[i][j];
+		}
+		sum[j]=s;
+	}
+	for(int i=0;i<r;i++){
+		available[i]=instances[i]-sum[i];
+	}
+	printf("Available resources:\n");
+	for(int i=0;i<r;i++){
+		printf("%d ",available[i]);
+	}
+	int ans[n], completed[n];
+	for(int i=0;i<n;i++){
+                completed[i]=0;
+        }
+	int k=0,completion=0;
+	for(int i=0;i<n;i++){
+	for(int i=0;i<n;i++){
+		int c=0;
+		for(int j=0;j<r;j++){
+			if(need[i][j]<=available[j] && completed[i]==0){
+				c++;
+			}
+		}
+		if(c==r){
+			ans[k++]=p[i];
+			completed[i]=1;
+			completion++;
+			for(int j=0;j<r;j++){
+				available[j]+=allocation[i][j];
+			}
+			printf("Safe sequence\n");
+		        for(int i=0;i<k;i++){
+                	printf("P%d-",ans[i]);
+        		}
+			printf("\n");
+		}
+	}
+	}
+	/*
+	printf("\n");
+	printf("AVAilable\n");
+	for(int i=0;i<r;i++){
+		printf("%d ",available[i]);
+	}
+	printf("\n");
+	*/
+	/*
+	printf("Safe sequence\n");
+	for(int i=0;i<k;i++){
+		printf("P%d-",ans[i]);
+	}*/
+
+	
+		
+
+	
+}
