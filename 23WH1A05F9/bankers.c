@@ -49,18 +49,31 @@ int main() {
     while (count < p) {
         for (i = 0; i < p; i++) {
             if (done[i] == 0) {
-                for (j = 0; j < c; j++) {
-                    if (need[i][j] > available[j])
-                        break;
+                safe[count] = i;
+                done[i] = 1;
+                printf("\nProcess P%d is executing...\n", i);
+                printf("Need Resources of P%d:\n",i);
+                for(int j=0;j<c;j++){
+                        printf("%d\t",need[i][j]);
                 }
-                if (j == c) {
-                    safe[count] = i;
-                    done[i] = 1;
-                    for (j = 0; j < c; j++) {
-                        available[j] += alc[i][j];
-                    }
-                    count++;
-                    terminate = 0;
+
+                printf("\nAvailable resources before Completion of P%d:\n",i);
+                for( j=0;j<c;j++){
+                        printf("%d\t",available[j]);
+                }
+
+                for (j = 0; j < c; j++) {
+                    available[j] += alc[i][j];
+                }
+
+                printf("\nAvailable resources after completion of P%d:\n", i);
+                for (j = 0; j < c; j++) {
+                    printf("%d\t", available[j]);
+                }
+                printf("\n");
+
+                count++;
+                terminate = 0;
                 } else {
                     terminate++;
                 }
