@@ -100,3 +100,54 @@ int main() {
     return 0;
 }
 
+
+
+
+
+
+
+
+/*
+  OUTPUT:-
+  Enter the number of processes and number of resources: 5 3
+Enter the process IDs: 1 2 3 4 5
+Enter the resource IDs: 1 2 3
+Enter the resources allocated to each process:
+0 1 0
+2 0 0
+3 0 2
+2 1 1
+0 0 2
+Enter the maximum resources needed by each process:
+7 5 3
+3 2 2
+9 0 2
+4 2 2
+5 3 3
+Enter the available resources: 3 3 2
+
+Before granting the request to process 2 the available resources are:
+ 3      3       2
+After granting the request to process 2 the available resources are:
+ 5      3       2
+Before granting the request to process 4 the available resources are:
+ 5      3       2
+After granting the request to process 4 the available resources are:
+ 7      4       3
+Before granting the request to process 5 the available resources are:
+ 7      4       3
+After granting the request to process 5 the available resources are:
+ 7      4       5
+Before granting the request to process 1 the available resources are:
+ 7      4       5
+After granting the request to process 1 the available resources are:
+ 7      5       5
+Before granting the request to process 3 the available resources are:
+ 7      5       5
+After granting the request to process 3 the available resources are:
+ 10     5       7
+The safe sequence is: 2 4 5 1 3
+
+  */
+
+
