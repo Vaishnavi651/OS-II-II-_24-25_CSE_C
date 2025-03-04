@@ -82,6 +82,13 @@ int main() {
 
         if (!found) {
             printf("\nThe system is in an unsafe state (Deadlock possible).\n");
+            printf("Processes that could not be allocated resources: ");
+            for (i = 0; i < process; i++) {
+                if (finished[i] == 0) {
+                    printf("P%d ", i);
+                }
+            }
+            printf("\n");
             return 1;
         }
     }
