@@ -29,16 +29,20 @@ int main() {
         scanf("%d", &availability[i]);
     }
 
+    printf("\nNeed Matrix:\n");
     for (i = 0; i < process; i++) {
         for (j = 0; j < no_of_resources; j++) {
             need[i][j] = max[i][j] - allocated[i][j];
+            printf("%d ", need[i][j]);
         }
+        printf("\n");
     }
 
     for (i = 0; i < process; i++) {
         finished[i] = 0;
     }
 
+    printf("\nStep-by-step resource allocation and availability:\n");
     while (count < process) {
         int found = 0;
         for (i = 0; i < process; i++) {
@@ -52,10 +56,22 @@ int main() {
                 }
 
                 if (can_allocate) {
-                 
+                    printf("Process P%d is allocated\n", i);
+                    printf("Available resources before allocation: ");
+                    for (j = 0; j < no_of_resources; j++) {
+                        printf("%d ", availability[j]);
+                    }
+                    printf("\n");
+                    
                     for (j = 0; j < no_of_resources; j++) {
                         availability[j] += allocated[i][j];
                     }
+
+                    printf("Available resources after allocation: ");
+                    for (j = 0; j < no_of_resources; j++) {
+                        printf("%d ", availability[j]);
+                    }
+                    printf("\n");
 
                     safe_sequence[count++] = i;
                     finished[i] = 1;
@@ -78,6 +94,3 @@ int main() {
 
     return 0;
 }
-
-
-   
