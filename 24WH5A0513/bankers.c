@@ -100,3 +100,23 @@ int main() {
 
     return 0;
 }
+OUTPUT:
+Enter number of processes: 5
+Enter number of resources: 3
+Enter allocation matrix:
+ 1 1 2
+2 1 2
+4 0 1
+0 2 0
+1 1 2
+Enter maximum matrix:
+4 3 3 
+3 2 2 
+9 0 2
+7 5 3
+1 1 2
+Enter available resources:
+2 1 0
+System is in a safe state.
+Safe sequence is: 1 4 0 2 3 
+
