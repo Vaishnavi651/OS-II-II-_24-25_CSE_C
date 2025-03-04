@@ -10,6 +10,8 @@ void calculateNeed(int processes, int resources, int allocated[MAX_PROCESSES][MA
 int isSafe(int processes, int resources, int allocated[MAX_PROCESSES][MAX_RESOURCES], 
            int need[MAX_PROCESSES][MAX_RESOURCES], int available[MAX_RESOURCES], int safeSequence[MAX_PROCESSES]);
 void printSafeSequence(int processes, int safeSequence[MAX_PROCESSES]);
+void printMatrix(int processes, int resources, int matrix[MAX_PROCESSES][MAX_RESOURCES], char *title);
+void printAvailable(int resources, int available[MAX_RESOURCES]);
 
 int main() {
     int processes, resources;
@@ -25,6 +27,9 @@ int main() {
     inputMatrices(processes, resources, allocated, max, available);
     calculateNeed(processes, resources, allocated, max, need);
 
+    printf("\nNeed Matrix:\n");
+    printMatrix(processes, resources, need, "Need");
+    
     if (isSafe(processes, resources, allocated, need, available, safeSequence)) {
         printSafeSequence(processes, safeSequence);
     } else {
@@ -97,6 +102,9 @@ int isSafe(int processes, int resources, int allocated[MAX_PROCESSES][MAX_RESOUR
                     safeSequence[count++] = i;
                     finished[i] = 1;
                     found = 1;
+                    
+                    printf("\nAfter allocating process P%d:\n", i);
+                    printAvailable(resources, work);
                 }
             }
         }
@@ -116,3 +124,20 @@ void printSafeSequence(int processes, int safeSequence[MAX_PROCESSES]) {
     printf(">\n");
 }
 
+void printMatrix(int processes, int resources, int matrix[MAX_PROCESSES][MAX_RESOURCES], char *title) {
+    printf("%s Matrix:\n", title);
+    for (int i = 0; i < processes; i++) {
+        for (int j = 0; j < resources; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void printAvailable(int resources, int available[MAX_RESOURCES]) {
+    printf("Available Resources: ");
+    for (int i = 0; i < resources; i++) {
+        printf("%d ", available[i]);
+    }
+    printf("\n");
+}
