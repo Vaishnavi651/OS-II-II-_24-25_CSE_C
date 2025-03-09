@@ -54,12 +54,12 @@ bool isSafe() {
 
     for (int i = 0; i < processes; i++) {
         if (!Finish[i]) {
-            printf("\n🚨 System is NOT in a safe state! Deadlock detected.\n");
+            printf("\n System is NOT in a safe state! Deadlock detected.\n");
             return false;
         }
     }
     
-    printf("\n✅ System is in a safe state.\nSafe sequence: ");
+    printf("\n System is in a safe state.\nSafe sequence: ");
     for (int i = 0; i < processes; i++)
         printf("P%d ", safeSeq[i]);
     printf("\n");
