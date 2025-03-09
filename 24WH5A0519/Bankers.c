@@ -1,31 +1,3 @@
-
-Conversation opened. 1 unread message. 
-
-Skip to content
-Using BVRITHYDERABAD Mail with screen readers
-
-14 of 1,020
-Fwd:
-Inbox
-
-TANVI MANDAS
-Attachments
-10:58 AM (11 hours ago)
-to me
-
-
-
----------- Forwarded message ---------
-From: SAI KRUSHINI LINGALA <24wh5a0513@bvrithyderabad.edu.in>
-Date: Tue, Mar 4, 2025 at 10:54 AM
-Subject:
-To: <24wh5a0517@bvrithyderabad.edu.in>
-
-
-
-
- One attachment
-  •  Scanned by Gmail
 #include <stdio.h>
 #include <stdbool.h>
 
@@ -128,5 +100,3 @@ int main() {
 
     return 0;
 }
-bankers.c
-Displaying bankers.c.
