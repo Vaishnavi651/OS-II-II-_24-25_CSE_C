@@ -13,7 +13,7 @@ void producer()
     ++full;   
     --empty;
     x++;
-    printf("\nProducer produces item %d", x);
+    printf("\nProducer produces  the item %d", x);
     printf("\nBuffer Status: %d full, %d empty", full, empty);
     ++mutex;
 }
@@ -23,7 +23,7 @@ void consumer()
     --mutex;   
     --full;
     ++empty;
-    printf("\nConsumer consumes item %d", x);
+    printf("\nConsumer consumes  the item %d", x);
     printf("\nBuffer Status: %d full, %d empty", full, empty);
     x--;
     ++mutex;
@@ -34,7 +34,7 @@ int main()
     int n, i;
     
     
-    printf("Enter the buffer size: ");
+    printf("Enter buffer size: ");
     scanf("%d", &empty);
 
     printf("\n1. Press 1 for Producer"
@@ -50,7 +50,7 @@ int main()
                 producer();
             }
             else {
-                printf("\nBuffer is full! Cannot produce more.");
+                printf("\nBuffer is full! Can't produce.");
                 printf("\nBuffer Status: %d full, %d empty", full, empty);
             }
             break;
@@ -59,7 +59,7 @@ int main()
                 consumer();
             }
             else {
-                printf("\nBuffer is empty! Cannot consume.");
+                printf("\nBuffer is empty! Can't consume.");
                 printf("\nBuffer Status: %d full, %d empty", full, empty);
             }
             break;
