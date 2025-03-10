@@ -1,0 +1,57 @@
+#include<stdio.h>
+#include<stdlib.h>
+int mutex=1;
+int full = 0;
+int empty;
+int x=0;
+
+void producer(){
+        --mutex;
+        ++full;
+        --empty;
+        x++;
+        printf("\nProducer produces item %d", x);
+        ++mutex;
+}
+
+void consumer(){
+        --mutex;
+        --full;
+        ++empty;
+        printf("\nConsumer consumes item %d", x);
+        x--;
+        ++mutex;
+}
+
+int main(){
+        int n,choice;
+        printf("Enter buffer size:");
+        scanf("%d",&n);
+        empty=n;
+        while(1){
+                printf("\nPress \n 1. for Producing \n 2. for Consuming \n 3. exit\n");
+                printf("\nEnter choice:");
+                scanf("%d",&choice);
+                switch(choice){
+                        case 1:
+                                if(mutex==1 && empty!=0){
+                                        producer();
+                                }
+                                else{
+                                        printf("\nBuffer is full!!\n");
+                                }
+                                break;
+                        case 2:
+                                if(mutex==1 && full!=0){
+                                        consumer();
+                                }
+                                else{
+                                        printf("\nBuffer is empty!!\n");
+                                }
+                                break;
+                        case 3:
+                                exit(0);
+                                break;
+                }
+        }
+}
