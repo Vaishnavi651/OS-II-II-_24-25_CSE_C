@@ -40,30 +40,16 @@ void producer()
 void consumer()
 {
     // Decrease mutex value by 1
-    --mutex;
+    --mute
+	
 
-    // Decrease the number of full
-    // slots by 1
-    --full;
-
-    // Increase the number of empty
-    // slots by 1
-    ++empty;
-    printf("\nConsumer consumes "
-           "item %d",
-           x);
-    x--;
-
-    // Increase mutex value by 1
-    ++mutex;
 }
-
-// Driver Code
-int main()
-{
-    int n, i;
-    printf("Enter the buffer size:");
-    scanf("%d",&empty);
+  
+    if(empty <=0){
+	printf("Buffer size if not valid...\n");
+	printf("Enter the valid size :");
+	scanf("%d",&empty);
+	 }
     printf("\n1. Press 1 for Producer"
            "\n2. Press 2 for Consumer"
            "\n3. Press 3 for Exit");
@@ -118,4 +104,3 @@ int main()
         }
     }
 }
-
