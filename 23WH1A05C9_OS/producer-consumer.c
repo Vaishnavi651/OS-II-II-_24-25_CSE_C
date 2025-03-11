@@ -70,6 +70,13 @@ int main()
     scanf("%d",&empty);
 
 
+    while(empty<=0)
+        {
+            printf("enter the valid size:");
+            scanf("%d",&empty);
+        }
+
+
     printf("\n1. Press 1 for Producer"
            "\n2. Press 2 for Consumer"
            "\n3. Press 3 for Exit");
