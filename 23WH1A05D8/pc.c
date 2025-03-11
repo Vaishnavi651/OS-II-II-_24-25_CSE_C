@@ -64,7 +64,7 @@ int main()
     int n, i;
     printf("Enter the buffer size:");
     scanf("%d",&empty);
-    if(empty <=0){
+    while(empty <=0){
 	printf("Buffer size if not valid...\n");
 	printf("Enter the valid size :");
 	scanf("%d",&empty);
