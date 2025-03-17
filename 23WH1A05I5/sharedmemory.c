@@ -42,9 +42,13 @@ int main() {
 }
 
 // in two different terminal tabs do it simultaneously
-// in first one, write writer code i.e gedit write.c -> mkfifo myfifo -> gcc write.c -o writer -> ./writer
-// in second one, write reader code i.e gedit read.c -> mkfifo myfifo -> gcc read.c -o reader -> ./reader
+
+// in first one, write writer code i.e gedit write.c => mkfifo myfifo => gcc write.c -o writer => ./writer
+
+// in second one, write reader code i.e gedit read.c => mkfifo myfifo => gcc read.c -o reader => ./reader
 
 // you'll get the following output for ./writer "Writer: Message sent to FIFO"
 
 // you'll get the following output for ./reader "Reader: Received message: Hello from Writer Process"
+
+
