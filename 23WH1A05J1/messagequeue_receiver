@@ -24,26 +24,32 @@ int main() {
         exit(1);
     }
 
-   
-    if (msgrcv(msgid, &message, sizeof(message.msg_text), 1, 0) == -1) {
-        perror("msgrcv failed");
-        exit(1);
-    }
-    printf("Received from Writer: %s", message.msg_text);
+    while (1) {
+        if (msgrcv(msgid, &message, sizeof(message.msg_text), 1, 0) == -1) {
+            perror("msgrcv failed");
+            exit(1);
+        }
 
-   
-    message.msg_type = 2;
-    printf("Enter reply: ");
-    fgets(message.msg_text, BUFFER_SIZE, stdin);
-   
-    if (msgsnd(msgid, &message, sizeof(message.msg_text), 0) == -1) {
-        perror("msgsnd");
-        exit(1);
+        printf("Received from Writer: %s", message.msg_text);
+
+        if (strncmp(message.msg_text, "exit", 4) == 0) {
+            break;
+        }
+
+        message.msg_type = 2;
+        printf("Enter reply: ");
+        fgets(message.msg_text, BUFFER_SIZE, stdin);
+
+        if (strncmp(message.msg_text, "exit", 4) == 0) {
+            msgsnd(msgid, &message, sizeof(message.msg_text), 0);
+            break;
+        }
+
+        if (msgsnd(msgid, &message, sizeof(message.msg_text), 0) == -1) {
+            perror("msgsnd failed");
+            exit(1);
+        }
     }
 
-    printf("Reply sent to Writer.\n");
     return 0;
 }
-
-
-	
