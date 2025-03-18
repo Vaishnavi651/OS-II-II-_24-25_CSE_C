@@ -1,39 +1,49 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/ipc.h>
-#include <sys/shm.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
 
-#define SHM_SIZE 1024  // Shared memory size
+#define FIFO1 "fifo1"
+#define FIFO2 "fifo2"
+#define BUFFER_SIZE 100
 
 int main() {
-    key_t key;
-    int shmid;
-    char *shm_addr;
-    key = ftok("shmfile", 65);
-    
-    // Locate shared memory segment
-    shmid = shmget(key, SHM_SIZE, 0666);
-    if (shmid == -1) {
-        perror("shmget failed");
+    int fd_read, fd_write;
+    char read_msg[BUFFER_SIZE], write_msg[BUFFER_SIZE];
+
+   
+    mkfifo(FIFO1, 0666);
+    mkfifo(FIFO2, 0666);
+
+   
+    fd_read = open(FIFO1, O_RDONLY);
+    if (fd_read == -1) {
+        perror("open read");
         exit(1);
     }
 
-    // Attach shared memory segment
-    shm_addr = (char *) shmat(shmid, NULL, 0);
-    if (shm_addr == (char *)(-1)) {
-        perror("shmat failed");
+   
+    fd_write = open(FIFO2, O_WRONLY);
+    if (fd_write == -1) {
+        perror("open write");
         exit(1);
     }
 
-    // Read from shared memory
-    printf("Data read from shared memory: %s\n", shm_addr);
+   
+    read(fd_read, read_msg, BUFFER_SIZE);
+    printf("Received from Writer: %s", read_msg);
 
-    // Detach from shared memory
-    shmdt(shm_addr);
+   
+    printf("Enter reply: ");
+    fgets(write_msg, BUFFER_SIZE, stdin);
+    write(fd_write, write_msg, strlen(write_msg) + 1);
 
-    // Destroy shared memory
-    shmctl(shmid, IPC_RMID, NULL);
+   
+    close(fd_read);
+    close(fd_write);
 
     return 0;
 }
-
