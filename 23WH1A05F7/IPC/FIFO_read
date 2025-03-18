@@ -1,0 +1,183 @@
+BHAVISHYA MADINENI23wh1a05e7@bvrithyderabad.edu.in10:44 AM GMT+5:30
+You created this chat on Tuesday, Mar 11
+.
+Space update:
+History is on
+Messages sent with history on are saved
+Tuesday, Mar 11
+You,
+Mar 11, 10:57 AM
+,
+#include <stdio.h>
+#include <stdlib.h>
+
+int full = 0;
+int empty = 10;
+int mutex = 1;
+int x = 0;
+
+void wait(int *S) {
+    while (*S <= 0);  // Busy waiting
+    (*S)--;
+}
+
+void signal(int *S) {
+    (*S)++;
+}
+
+void producer() {
+    wait(&empty);
+    wait(&mutex);
+    x++;
+    printf("\nProducer produces item %d", x);
+    signal(&full);
+    signal(&mutex);
+}
+
+void consumer() {
+    wait(&full);
+    wait(&mutex);
+    printf("\nConsumer consumes item %d", x);
+    x--;
+    signal(&empty);
+    signal(&mutex);
+}
+
+int main() {
+    int n, i;
+    printf("\n1. Press 1 for Producer"
+           "\n2. Press 2 for Consumer"
+           "\n3. Press 3 for Exit");
+
+    for (i = 1; i > 0; i++) {
+        printf("\nEnter your choice: ");
+        scanf("%d", &n);
+
+        switch (n) {
+        case 1:
+            if (mutex == 1 && empty != 0) {
+                producer();
+            } else {
+                printf("\nBuffer is full!");
+            }
+            break;
+
+        case 2:
+            if (mutex == 1 && full != 0) {
+                consumer();
+            } else {
+                printf("\nBuffer is empty!");
+            }
+            break;
+
+        case 3:
+            exit(0);
+            break;
+        }
+    }
+}
+, Mar 11, 10:57 AM
+,
+Today
+BHAVISHYA MADINENI,
+9:41 AM
+,
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+
+#define FIFO1 "fifo1"
+#define FIFO2 "fifo2"
+#define BUFFER_SIZE 100
+
+int main() {
+    int fd_write, fd_read;
+    char write_msg[BUFFER_SIZE], read_msg[BUFFER_SIZE];
+
+   
+    mkfifo(FIFO1, 0666);
+    mkfifo(FIFO2, 0666);
+
+   
+    fd_write = open(FIFO1, O_WRONLY);
+    if (fd_write == -1) {
+        perror("open write");
+        exit(1);
+    }
+
+   
+    fd_read = open(FIFO2, O_RDONLY);
+    if (fd_read == -1) {
+        perror("open read");
+        exit(1);
+    }
+
+   
+    printf("Enter message: ");
+    fgets(write_msg, BUFFER_SIZE, stdin);
+    write(fd_write, write_msg, strlen(write_msg) + 1);
+
+     read(fd_read, read_msg, BUFFER_SIZE);
+    printf("Received from Reader: %s", read_msg);
+
+   
+    close(fd_write);
+    close(fd_read);
+
+    return 0;
+}
+, 9:41 AM
+,
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+
+#define FIFO1 "fifo1"
+#define FIFO2 "fifo2"
+#define BUFFER_SIZE 100
+
+int main() {
+    int fd_read, fd_write;
+    char read_msg[BUFFER_SIZE], write_msg[BUFFER_SIZE];
+
+   
+    mkfifo(FIFO1, 0666);
+    mkfifo(FIFO2, 0666);
+
+   
+    fd_read = open(FIFO1, O_RDONLY);
+    if (fd_read == -1) {
+        perror("open read");
+        exit(1);
+    }
+
+   
+    fd_write = open(FIFO2, O_WRONLY);
+    if (fd_write == -1) {
+        perror("open write");
+        exit(1);
+    }
+
+   
+    read(fd_read, read_msg, BUFFER_SIZE);
+    printf("Received from Writer: %s", read_msg);
+
+   
+    printf("Enter reply: ");
+    fgets(write_msg, BUFFER_SIZE, stdin);
+    write(fd_write, write_msg, strlen(write_msg) + 1);
+
+   
+    close(fd_read);
+    close(fd_write);
+
+    return 0;
+}
