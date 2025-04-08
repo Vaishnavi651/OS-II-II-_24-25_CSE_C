@@ -1,69 +1,38 @@
-#include <stdio.h>
-#include <stdlib.h>
+# include<stdio.h>
+ #include<stdbool.h>
 
-void sort(int n, int p[100], int at[100], int bt[100]) {
-    for (int i = 0; i < n; i++) {
-        for (int j = i + 1; j < n; j++) { 
-            if (at[i] > at[j]) {
-                int temp = at[i];
-                at[i] = at[j];
-                at[j] = temp;
+ void FCFS ( int pages [] , int n , int capacity ) {
+ int queue [ capacity ] , front = 0 , count = 0 , page_faults = 0 ,hits = 0;
 
-                temp = bt[i];
-                bt[i] = bt[j];
-                bt[j] = temp;
+ bool in_memory [100] = { false }; // Track if a page is in memory
 
-                temp = p[i];
-                p[i] = p[j];
-                p[j] = temp;
-            }
-        }
-    }
-}
+ for (int i = 0; i < n ; i ++) {
+ if ( in_memory [ pages [ i ]]) { // Page hit
+ hits ++;
+ } else { // Page fault
+ if ( count < capacity ) {
+ queue [ count ++] = pages [ i ];
+ } else {
+ in_memory [ queue [ front ]] = false ; // Remove oldest page
 
-int main() {
-    int n;
-    printf("Enter the number of processes to analyze: ");
-    scanf("%d", &n);
-    
-    int bt[100], at[100], tt[100], ct[100], wt[100], p[100];
+ queue [ front ] = pages [ i ];
+ front = ( front + 1) % capacity ;
+ }
+ in_memory [ pages [ i ]] = true ;
+ page_faults ++;
+ }
+ }
+ int misses = page_faults ;
+ printf (" Total Page Faults : %d\n", page_faults ) ;
+ printf (" Total Hits : %d\n", hits ) ;
+ printf (" Total Misses : %d\n", misses ) ;
+ }
 
-    printf("Enter the arrival time and burst time of processes:\n");
-    for (int i = 0; i < n; i++) {
-        p[i] = i + 1;
-        scanf("%d %d", &at[i], &bt[i]);
-    }
-	
-    sort(n, p, at, bt);
+ int main () {
+ int pages [] = {1 , 3 , 0 , 3 , 5 , 6 , 3 , 5 , 1 , 0};
+ int n = sizeof ( pages ) / sizeof ( pages [0]) ;
+ int capacity = 3;
 
-    int sum = 0, sum1 = 0, sum2 = 0;
-
-    for (int x = 0; x < n; x++) {
-        sum += bt[x];
-        ct[x] = sum; 
-    }
-
-    for (int c = 0; c < n; c++) {
-        tt[c] = ct[c] - at[c];
-    }
-
-    for (int g = 0; g < n; g++) {
-        wt[g] = tt[g] - bt[g];
-    }
-
-    for (int y = 0; y < n; y++) {
-        sum1 += tt[y];
-        sum2 += wt[y];
-    }
-
-    printf("Processes    Arrival Time    Burst Time    Completion Time    Turnaround Time    Waiting Time\n");
-    for (int x = 0; x < n; x++) {
-        printf("%d           %d              %d              %d                %d               %d\n",
-               p[x], at[x], bt[x], ct[x], tt[x], wt[x]);
-    }
-
-    printf("The average Turnaround Time is: %.2f\n", (float)sum1 / n);
-    printf("The average Waiting Time is: %.2f\n", (float)sum2 / n);
-
-    return 0;
-}
+ FCFS ( pages , n , capacity ) ;
+ return 0;
+ }
