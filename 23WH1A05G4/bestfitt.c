@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <stdio.h> 
 int main() {
     int memory_size, num_blocks, num_processes;
     int block_size[10], process_size[10], allocation[10];
