@@ -60,19 +60,26 @@ int main() {
     }
 
     int y = 0;
-    for (k = 0; k < n; k++) {
-        for (i = 0; i < n; i++) {
-            if (f[i] == 0) { 
+    for (k = 0; k < n; k++) 
+    {
+        for (i = 0; i < n; i++) 
+	{
+            if (f[i] == 0) 
+	    { 
                 int flag = 0;
-                for (j = 0; j < m; j++) {
-                    if (need[i][j] > avail[j]) { 
+                for (j = 0; j < m; j++) 
+		{
+                    if (need[i][j] > avail[j]) 
+		    { 
                         flag = 1;
                         break;
                     }
                 }
-                if (flag == 0) { 
+                if (flag == 0) 
+		{ 
                     ans[ind++] = i;
-                    for (y = 0; y < m; y++) {
+                    for (y = 0; y < m; y++) 
+		    {
                         avail[y] += alloc[i][y]; 
                     }
                     f[i] = 1; 
