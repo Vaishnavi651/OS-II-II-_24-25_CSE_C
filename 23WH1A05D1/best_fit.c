@@ -46,3 +46,16 @@
   }
   return 0;
   }
+
+
+/* Enter the size ofmemory: 1000
+ Enter the number ofmemory blocks: 5
+ Enter the size ofmemory block1: 200
+ Enter the size ofmemory block2: 300
+ Enter the size ofmemory block3: 100
+ Enter the size ofmemory block4: 150
+ Enter the size ofmemory block5: 250
+ Enter the number ofprocesses:4
+ Enter the size ofprocess 1:120
+ Enter the size ofprocess 2:200
+ Enter the size ofprocess 3:350*/
