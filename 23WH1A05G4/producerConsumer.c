@@ -1,153 +1,92 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <semaphore.h>
 #include <pthread.h>
+#include <semaphore.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-sem_t empty;
-sem_t full;
-pthread_mutex_t mutex;
+sem_t empty, full, mutex;
+int *buffer; 
+int in = 0, out = 0;
+int BUFFER_SIZE;
 
-void printBuffer(int buffer[], int bufsize, int in, int out) {
-    printf("\nBuffer: ");
-    if (in == out) {
-        printf("Empty");
-    } else {
-        int index = out;
-        while (index != in) {
-            printf("%d ", buffer[index]);
-            index = (index + 1) % bufsize;
-        }
+void produce_item() {
+    int item = rand() % 100;
+
+    if (sem_trywait(&empty) != 0) {
+        printf("Buffer is full. Cannot produce.\n");
+        return;
     }
-    printf("\n");
+
+    sem_wait(&mutex);
+
+    printf("Producer entering critical section\n");
+    buffer[in] = item;
+    printf("Produced: %d (Stored at index %d)\n", item, in);
+    in = (in + 1) % BUFFER_SIZE;
+    printf("Producer exiting critical section\n");
+
+    sem_post(&mutex);
+    sem_post(&full);
 }
 
-void *producer(void *arg) {
-    int *buffer = (int *)arg;
-    int bufsize = buffer[0];
-    int in = buffer[1];
-    int out = buffer[2];
-    int produce;
-
-    while (1) {
-        sem_wait(&empty);
-        pthread_mutex_lock(&mutex);
-
-        printf("\nEnter the value to produce: ");
-        scanf("%d", &produce);
-        buffer[in] = produce;
-        in = (in + 1) % bufsize;
-
-        printf("\nProducer produced: %d", produce);
-        printBuffer(buffer, bufsize, in, out);
-
-        pthread_mutex_unlock(&mutex);
-        sem_post(&full);
+void consume_item() {
+    if (sem_trywait(&full) != 0) {
+        printf("Buffer is empty. Cannot consume.\n");
+        return;
     }
-}
 
-void *consumer(void *arg) {
-    int *buffer = (int *)arg;
-    int bufsize = buffer[0];
-    int in = buffer[1];
-    int out = buffer[2];
-    int consume;
+    sem_wait(&mutex);
 
-    while (1) {
-        sem_wait(&full);
-        pthread_mutex_lock(&mutex);
+    printf("Consumer entering critical section\n");
+    int item = buffer[out];
+    printf("Consumed: %d (Taken from index %d)\n", item, out);
+    out = (out + 1) % BUFFER_SIZE;
+    printf("Consumer exiting critical section\n");
 
-        consume = buffer[out];
-        out = (out + 1) % bufsize;
-
-        printf("\nConsumer consumed: %d", consume);
-        printBuffer(buffer, bufsize, in, out);
-
-        pthread_mutex_unlock(&mutex);
-        sem_post(&empty);
-    }
+    sem_post(&mutex);
+    sem_post(&empty);
 }
 
 int main() {
-    int bufsize, in, out, choice;
-    int *buffer;
+    pthread_t prod_thread, cons_thread;
 
-    printf("Enter buffer size: ");
-    scanf("%d", &bufsize);
+    printf("Enter the buffer size: ");
+    scanf("%d", &BUFFER_SIZE);
 
-    buffer = (int *)malloc((bufsize + 3) * sizeof(int));
-    if (buffer == NULL) {
-        printf("Memory allocation failed!\n");
-        return -1;
+    buffer = (int *)malloc(BUFFER_SIZE * sizeof(int)); 
+    if(buffer == NULL){
+        printf("Memory allocation failed.\n");
+        return 1;
     }
 
-    buffer[0] = bufsize;
-    in = 1;
-    out = 2;
-    buffer[in] = buffer[out] = 0;
-
-    sem_init(&empty, 0, bufsize);
+    sem_init(&empty, 0, BUFFER_SIZE);
     sem_init(&full, 0, 0);
-    pthread_mutex_init(&mutex, NULL);
+    sem_init(&mutex, 0, 1);
 
-    pthread_t producer_thread, consumer_thread;
-
-    pthread_create(&producer_thread, NULL, producer, buffer);
-    pthread_create(&consumer_thread, NULL, consumer, buffer);
-
-    do {
-        printf("\nMenu:\n");
-        printf("1. Produce\n");
-        printf("2. Consume\n");
-        printf("3. Exit\n");
-        printf("Enter your choice: ");
+    int choice;
+    while (1) {
+        printf("\n1. Produce\n2. Consume\n3. Exit\nEnter your choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
             case 1:
-                sem_wait(&empty);
-                pthread_mutex_lock(&mutex);
-                printf("\nEnter the value to produce: ");
-                int produce;
-                scanf("%d", &produce);
-                buffer[in] = produce;
-                in = (in + 1) % bufsize;
-                printf("\nProducer produced: %d", produce);
-                printBuffer(buffer, bufsize, in, out);
-                pthread_mutex_unlock(&mutex);
-                sem_post(&full);
+                produce_item();
                 break;
-
             case 2:
-                sem_wait(&full);
-                pthread_mutex_lock(&mutex);
-                int consume = buffer[out];
-                out = (out + 1) % bufsize;
-                printf("\nConsumer consumed: %d", consume);
-                printBuffer(buffer, bufsize, in, out);
-                pthread_mutex_unlock(&mutex);
-                sem_post(&empty);
+                consume_item();
                 break;
-
             case 3:
-                printf("\nExiting...\n");
-                break;
-
+                sem_destroy(&empty);
+                sem_destroy(&full);
+                sem_destroy(&mutex);
+                free(buffer); 
+                printf("Exiting.\n");
+                return 0;
             default:
-                printf("\nInvalid choice, please try again.");
-                break;
+                printf("Invalid choice.\n");
         }
-    } while (choice != 3);
+        sleep(1);
+    }
 
-    pthread_cancel(producer_thread);
-    pthread_cancel(consumer_thread);
-
-    pthread_join(producer_thread, NULL);
-    pthread_join(consumer_thread, NULL);
-
-    sem_destroy(&empty);
-    sem_destroy(&full);
-    pthread_mutex_destroy(&mutex);
-
-    free(buffer);
     return 0;
 }
