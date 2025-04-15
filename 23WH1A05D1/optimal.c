@@ -60,3 +60,7 @@
   optimalPageReplacement(pages, n, frameSize);
   return 0;
   }
+
+/*Total Page Faults: 6
+Total Hits: 4
+Total Misses: 6*/
