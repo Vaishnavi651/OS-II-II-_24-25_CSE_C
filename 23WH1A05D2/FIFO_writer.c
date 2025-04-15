@@ -18,12 +18,12 @@ int main()
     {
         fd = open(myfifo, O_WRONLY);
         fgets(arr2, 80, stdin);
-
         write(fd, arr2, strlen(arr2)+1);
         close(fd);
 
         fd = open(myfifo, O_RDONLY);
         read(fd, arr1, sizeof(arr1));
+        
         printf("User2: %s\n", arr1);
         close(fd);
     }
