@@ -39,4 +39,6 @@ int main() {
     FCFS(pages, n, capacity);
     return 0;
 }
-
+/*Total Page Faults: 8
+Total Hits: 2
+Total Misses: 8*/
