@@ -46,3 +46,7 @@
   LRU(pages, n, capacity);
   return 0;
   }
+
+/*Total Page Faults: 6
+Total Hits: 2
+Total Misses: 6*/
