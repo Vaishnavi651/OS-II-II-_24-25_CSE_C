@@ -12,8 +12,8 @@ void main() {
     int process[n];
     int brust[n];
 
-    for(int j = 0; j < n; j++) {
-        process[j] = j + 1;
+    for(int i= 0; i< n; i++) {
+        process[i] = i+ 1;
     }
 
     printf("Enter arrival times: ");
@@ -22,8 +22,8 @@ void main() {
     }
 
     printf("Enter burst times: ");
-    for(int k = 0; k < n; k++) {
-        scanf("%d", &brust[k]);
+    for(int i= 0; i< n; i++) {
+        scanf("%d", &brust[i]);
     }
 
     bubblesort(n, process, arrival, brust);
@@ -39,9 +39,9 @@ void main() {
         total_time = ct[m];
     }
 
-    for(int l = 0; l < n; l++) {
-        tt[l] = ct[l] - arrival[l];
-        wt[l] = tt[l] - brust[l];
+    for(int i = 0; i < n; i++) {
+        tt[i] = ct[i] - arrival[i];
+        wt[i] = tt[i] - brust[i];
     }
 
     printf("\nProcess\tArrival\tBurst\tCompletion\tTurnaround\tWaiting Time\n");
