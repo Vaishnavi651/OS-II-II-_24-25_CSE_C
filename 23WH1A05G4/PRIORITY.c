@@ -31,8 +31,7 @@ int main() {
         int minIndex = -1;
 
         for (i = 0; i < n; i++) {
-            if (!completed[i] && at[i] <= currentTime && 
-                (minIndex == -1 || pr[i] < pr[minIndex])) {
+            if (!completed[i] && at[i] <= currentTime &&  (minIndex == -1 || pr[i] < pr[minIndex])) {
                 minIndex = i;
             }
         }
