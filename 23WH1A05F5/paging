@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int PAGE_SIZE, TOTAL_PAGES;
+
+    // Take PAGE_SIZE and TOTAL_PAGES as input
+    printf("Enter the size of each page (PAGE_SIZE): ");
+    scanf("%d", &PAGE_SIZE);
+
+    printf("Enter total number of pages (TOTAL_PAGES): ");
+    scanf("%d", &TOTAL_PAGES);
+
+    int pageTable[TOTAL_PAGES];
+
+    // Take page table entries as input
+    printf("Enter the frame number for each page:\n");
+    for (int i = 0; i < TOTAL_PAGES; i++) {
+        printf("Page %d --> Frame: ", i);
+        scanf("%d", &pageTable[i]);
+    }
+
+    int logicalAddress, pageNumber, offset, physicalAddress;
+
+    // Take logical address input
+    printf("\nEnter logical address (Page Number * PAGE_SIZE + Offset): ");
+    scanf("%d", &logicalAddress);
+
+    // Calculate page number and offset
+    pageNumber = logicalAddress / PAGE_SIZE;
+    offset = logicalAddress % PAGE_SIZE;
+
+    // Check if page number is valid
+    if (pageNumber >= TOTAL_PAGES) {
+        printf("Error: Invalid Page Number!\n");
+        return 1;
+    }
+
+    // Get frame number from the page table
+    int frameNumber = pageTable[pageNumber];
+
+    // Calculate physical address
+    physicalAddress = (frameNumber * PAGE_SIZE) + offset;
+
+    // Output results
+    printf("\n----- Result -----\n");
+    printf("Logical Address: %d\n", logicalAddress);
+    printf("Page Number: %d, Offset: %d\n", pageNumber, offset);
+    printf("Frame Number: %d\n", frameNumber);
+    printf("Physical Address: %d\n", physicalAddress);
+
+    return 0;
+}
