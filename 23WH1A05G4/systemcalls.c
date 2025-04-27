@@ -31,7 +31,6 @@ int main(){
     else{
         printf("Parent Process(PID:%d).\n",getpid());
         pid_t wait_pid= waitpid(pid,&status,0);
-      //when waitpid is used wait can be ignored. wait is for simpler actions
         
         if(wait_pid>=0){
             printf("Child process (PID:%d) executed succuessfully",wait_pid);
