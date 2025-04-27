@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_SEGMENTS 10
+
+// Struct to store segment info
+typedef struct {
+    int base;   // starting address of the segment
+    int limit;  // size of the segment
+} Segment;
+
+int main() {
+    int num_segments;
+    Segment segments[MAX_SEGMENTS];  // segment table
+    int base_address = 0;
+
+    printf("Enter the number of segments: ");
+    scanf("%d", &num_segments);
+
+    // Step 1: Get size for each segment and assign base address
+    for (int i = 0; i < num_segments; i++) {
+        printf("Enter the size of segment %d: ", i + 1);
+        scanf("%d", &segments[i].limit);  // store segment size
+        segments[i].base = base_address;  // assign base address
+        base_address += segments[i].limit;  // update base for next segment
+    }
+
+    // Step 2: Print Segment Table
+    printf("\nSegment Table:\n");
+    printf("Segment Number\tBase Address\tLimit\n");
+    for (int i = 0; i < num_segments; i++) {
+        printf("%d\t\t%d\t\t%d\n", i, segments[i].base, segments[i].limit);
+    }
+
+    // Step 3: Get Logical Address from user
+    int segment_number, offset;
+    printf("\nEnter the logical address (segment number and offset): ");
+    scanf("%d %d", &segment_number, &offset);
+
+    // Step 4: Validations
+    if (segment_number < 0 || segment_number >= num_segments) {
+        printf("Invalid segment number!\n");
+    } else if (offset < 0 || offset >= segments[segment_number].limit) {
+        printf("Invalid offset!\n");
+    } else {
+        int physical_address = segments[segment_number].base + offset;
+        printf("Physical address: %d\n", physical_address);
+    }
+
+    return 0;
+}
