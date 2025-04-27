@@ -31,12 +31,12 @@ void main() {
     int ct[n], tt[n], wt[n];
     int total_time = 0;
 
-    for(int m = 0; m < n; m++) {
-        if(total_time < arrival[m]) {
-            total_time = arrival[m];
+    for(int i = 0; i < n; i++) {
+        if(total_time < arrival[i]) {
+            total_time = arrival[i];
         }
-        ct[m] = total_time + brust[m];
-        total_time = ct[m];
+        ct[i] = total_time + brust[i];
+        total_time = ct[i];
     }
 
     for(int i = 0; i < n; i++) {
