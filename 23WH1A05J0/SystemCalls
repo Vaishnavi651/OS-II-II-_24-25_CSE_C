@@ -20,9 +20,10 @@ int main() {
         printf("Parent PID: %d\n", getpid());
         int status;
         wait(&status);
+        waitpid(pid, &status, 0);
         printf("Child process finished with status %d\n", WEXITSTATUS(status));
     }
+
     return 0;
-
-
 }
+
